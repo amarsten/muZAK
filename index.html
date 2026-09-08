@@ -1,0 +1,120 @@
+<style type="text/css">
+  .garden {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -300px;
+    margin-left: -300px;
+    width: 600px;
+    height: 600px;
+    border: 5px solid #CCC;
+    border-radius: 10px;
+  }
+
+
+  .ball {
+    position: absolute;
+    top   : 270px;
+    left  : 270px;
+    width : 60px;
+    height: 60px;
+    background: green;
+    border-radius: 100%;
+  }
+</style>
+
+<div class="garden">
+    <div class="ball"></div>
+    <button id="btn">click me please work uwu</button>
+</div>
+
+<pre class="output"></pre>
+
+<script src='tone.js'></script>
+<script src='tonejs-ui.js'></script>
+
+<script type="text/javascript">
+  var ball   = document.querySelector('.ball');
+  var garden = document.querySelector('.garden');
+  var output = document.querySelector('.output');
+
+  var maxX = garden.clientWidth  - ball.clientWidth;
+  var maxY = garden.clientHeight - ball.clientHeight;
+
+  var data;
+
+  var oscillators = [];
+
+                var bassFreq = 32;
+
+                for (var i = 0; i < 8; i++){
+                        oscillators.push(new Tone.Oscillator({
+                                "frequency" : bassFreq * i,
+                                "type" : "sawtooth10",
+                                "volume" : -Infinity,
+                                "detune" : Math.random() * 30 - 15,
+                        }).toMaster());
+                }
+
+                //bind the interface
+                document.querySelector("#btn").addEventListener("click", e => {
+                        oscillators.forEach(o => {
+                                if (e.detail){
+                                        o.start();
+                                        o.volume.rampTo(0, 1);
+                                } else {
+                                        o.stop("+1.2");
+                                        o.volume.rampTo(-Infinity, 1);
+                                }
+                        });
+                });
+
+  function handleOrientation(event) {
+    var x = event.beta;  // In degree in the range [-180,180]
+    var y = event.gamma; // In degree in the range [-90,90]
+
+    output.innerHTML  = "beta : " + x + "\n";
+    output.innerHTML += "gamma: " + y + "\n";
+
+    // Because we don't want to have the device upside down
+    // We constrain the x value to the range [-90,90]
+    if (x >  90) { x =  90};
+    if (x < -90) { x = -90};
+
+    // To make computation easier we shift the range of
+    // x and y to [0,180]
+    x += 90;
+    y += 90;
+
+    // 10 is half the size of the ball
+    // It center the positioning point to the center of the ball
+    ball.style.top  = (maxX*x/180 - 10) + "px";
+    ball.style.left = (maxY*y/180 - 10) + "px";
+    oscillators.forEach((osc, i) => {
+      osc.frequency.rampTo(maxY*y/180 - 10);
+    });
+    data = [maxY*y/180 - 10, maxX*x/180 - 10];
+
+  }
+
+  window.addEventListener('deviceorientation', handleOrientation);
+
+  function sendInput(){
+
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', '/input', true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            let info  = JSON.parse(xhr.responseText);
+        }
+    };
+
+    xhr.send("x=" + data.toString());
+
+    console.log("Sent request");
+  }
+
+  let intervalID = window.setInterval(sendInput, 500);
+
+</script>
