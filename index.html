@@ -58,6 +58,7 @@
 
                 //bind the interface
                 document.querySelector("#btn").addEventListener("click", e => {
+                        window.addEventListener('deviceorientation', handleOrientation);
                         oscillators.forEach(o => {
                                 if (e.detail){
                                         o.start();
@@ -97,7 +98,7 @@
 
   }
 
-  window.addEventListener('deviceorientation', handleOrientation);
+  
 
   function sendInput(){
 
