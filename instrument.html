@@ -162,7 +162,7 @@
     xhr.open('GET', 'https://muzak-49c049edaeff.herokuapp.com/output', true);
     xhr.onload = function() {
         if (xhr.status === 200) {
-            let info  = xhr.responseText;
+            let info  = JSON.parse(xhr.responseText);
             console.log(info);
             info = info.output.slice(2).split(',');
             // console.log(info);
