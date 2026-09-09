@@ -57,7 +57,7 @@
   }
 
   if (window.DeviceOrientationEvent) {
-    window.addEventListener('deviceorientation', deviceOrientationHandler, false);
+    window.addEventListener('deviceorientation', handleOrientation, false);
     document.getElementById('btn').innerText = 'Supported!';
   }
 
