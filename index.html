@@ -45,30 +45,34 @@
 
   var oscillators = [];
 
-                var bassFreq = 32;
+  var bassFreq = 32;
 
-                for (var i = 0; i < 8; i++){
-                        oscillators.push(new Tone.Oscillator({
-                                "frequency" : bassFreq * i,
-                                "type" : "sawtooth10",
-                                "volume" : -Infinity,
-                                "detune" : Math.random() * 30 - 15,
-                        }).toMaster());
-                }
+  for (var i = 0; i < 8; i++){
+    oscillators.push(new Tone.Oscillator({
+      "frequency" : bassFreq * i,
+      "type" : "sawtooth10",
+      "volume" : -Infinity,
+      "detune" : Math.random() * 30 - 15,
+    }).toMaster());
+  }
 
-                //bind the interface
-                document.querySelector("#btn").addEventListener("click", e => {
-                        window.addEventListener('deviceorientation', handleOrientation);
-                        oscillators.forEach(o => {
-                                if (e.detail){
-                                        o.start();
-                                        o.volume.rampTo(0, 1);
-                                } else {
-                                        o.stop("+1.2");
-                                        o.volume.rampTo(-Infinity, 1);
-                                }
-                        });
-                });
+  if (window.DeviceOrientationEvent) {
+    window.addEventListener('deviceorientation', deviceOrientationHandler, false);
+    document.getElementById('btn').innerText = 'Supported!';
+  }
+
+  //bind the interface
+  document.querySelector("#btn").addEventListener("click", e => {
+    oscillators.forEach(o => {
+      if (e.detail){
+        o.start();
+        o.volume.rampTo(0, 1);
+      } else {
+        o.stop("+1.2");
+        o.volume.rampTo(-Infinity, 1);
+      }
+    });
+  });
 
   function handleOrientation(event) {
     var x = event.beta;  // In degree in the range [-180,180]
@@ -106,11 +110,11 @@
     xhr.open('POST', '/input', true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhr.onload = function() {
-        if (xhr.status === 200) {
-            let info  = xhr.responseText;
-            console.log(data.toString());
-            
-        }
+      if (xhr.status === 200) {
+        let info  = xhr.responseText;
+        console.log(data.toString());
+          
+      }
     };
 
     xhr.send("x=" + data.toString());
