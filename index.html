@@ -64,9 +64,7 @@
 
     const permission = await DeviceOrientationEvent.requestPermission();
     if (permission === "granted") {
-      window.addEventListener("deviceorientation", (event) => {
-        document.querySelector("#btn").innerHTML = `Alpha: ${event.alpha} Beta: ${event.beta} Gamma: ${event.gamma}`;
-      });
+      window.addEventListener("deviceorientation", handleOrientation)
     }
   });
 
