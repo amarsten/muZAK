@@ -56,11 +56,6 @@
     }).toMaster());
   }
 
-  if (window.DeviceOrientationEvent) {
-    window.addEventListener('deviceorientation', handleOrientation, false);
-    
-  }
-
   document.querySelector("#btn").addEventListener("click", async () => {
   if (typeof DeviceOrientationEvent.requestPermission !== "function") {
       // The feature is not available, or does not need permission.
