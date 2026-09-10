@@ -71,17 +71,17 @@
   });
 
   //bind the interface
-  document.querySelector("#btn").addEventListener("click", e => {
-    oscillators.forEach(o => {
-      if (e.detail){
-        o.start();
-        o.volume.rampTo(0, 1);
-      } else {
-        o.stop("+1.2");
-        o.volume.rampTo(-Infinity, 1);
-      }
-    });
-  });
+  // document.querySelector("#btn").addEventListener("click", e => {
+  //   oscillators.forEach(o => {
+  //     if (e.detail){
+  //       o.start();
+  //       o.volume.rampTo(0, 1);
+  //     } else {
+  //       o.stop("+1.2");
+  //       o.volume.rampTo(-Infinity, 1);
+  //     }
+  //   });
+  // });
 
   function handleOrientation(event) {
     var x = event.beta;  // In degree in the range [-180,180]
