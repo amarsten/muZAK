@@ -58,8 +58,22 @@
 
   if (window.DeviceOrientationEvent) {
     window.addEventListener('deviceorientation', handleOrientation, false);
-    document.getElementById('btn').innerText = 'Supported!';
+    
   }
+
+  document.querySelector("#btn").addEventListener("click", async () => {
+  if (typeof DeviceOrientationEvent.requestPermission !== "function") {
+      // The feature is not available, or does not need permission.
+      return;
+    }
+
+    const permission = await DeviceOrientationEvent.requestPermission();
+    if (permission === "granted") {
+      window.addEventListener("deviceorientation", (event) => {
+        document.querySelector("#btn").innerHTML = `Alpha: ${event.alpha} Beta: ${event.beta} Gamma: ${event.gamma}`;
+      });
+    }
+  });
 
   //bind the interface
   document.querySelector("#btn").addEventListener("click", e => {
